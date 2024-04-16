@@ -6,12 +6,10 @@ module "vpc" {
   name                 = var.project_name
   cidr                 = "10.0.0.0/16"
   azs                  = data.aws_availability_zones.available.names
-  public_subnets       = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
+  public_subnets       = ["10.0.4.0/24", "10.0.5.0/24"]
   enable_dns_hostnames = true
   enable_dns_support   = true
 }
-
-
 
 resource "aws_db_subnet_group" "aurora" {
   name       = "education-aurora"
@@ -19,24 +17,24 @@ resource "aws_db_subnet_group" "aurora" {
   tags = {
     Name = "Education Aurora"
   }
-
   depends_on = [module.vpc]
 }
-
 
 resource "aws_security_group" "aurora" {
   name   = "education_aurora"
   vpc_id = module.vpc.vpc_id
- ingress {
-    from_port   = 5432
-    to_port     = 5432
+  
+  ingress {
+    from_port   = 3306  # MySQL port
+    to_port     = 3306  # MySQL port
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  
   egress {
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -47,33 +45,30 @@ resource "aws_security_group" "aurora" {
 
 resource "aws_rds_cluster_parameter_group" "aurora" {
   name   = "education-aurora-params"
-  family = "aurora-postgresql16"
+  family = "aurora-mysql5.7"
   parameter {
-    name  = "log_connections"
+    name  = "log_queries_not_using_indexes"
     value = "1"
   }
 }
 
 resource "aws_rds_cluster" "cluster" {
-  engine                  = "aurora-postgresql"
+  engine                  = "aurora-mysql"
   engine_mode             = "provisioned"
-  engine_version          = "16.2"
+  engine_version          = "5.7.mysql_aurora.2.07.10"
   cluster_identifier      = var.project_name
-  master_username         = var.postgres_username
-  master_password         = var.postgres_password
+  master_username         = var.mysql_username
+  master_password         = var.mysql_password
   
   db_subnet_group_name    = aws_db_subnet_group.aurora.name
-  
   backup_retention_period = 7
   skip_final_snapshot     = true
-
-vpc_security_group_ids  = [aws_security_group.aurora.id] 
-
+  vpc_security_group_ids  = [aws_security_group.aurora.id]
 }
 
 resource "aws_rds_cluster_instance" "cluster_instances" {
   identifier         = "${var.project_name}-${count.index}"
-  count              = 4
+  count              = 1  # Adjust count as needed
   cluster_identifier = aws_rds_cluster.cluster.id
   instance_class     = "db.t3.medium"
   engine             = aws_rds_cluster.cluster.engine
@@ -85,4 +80,3 @@ resource "aws_rds_cluster_instance" "cluster_instances" {
 output "private_subnet_ids" {
   value = module.vpc.private_subnets
 }
-

@@ -46,18 +46,30 @@ resource "aws_elastic_beanstalk_environment" "tfenvtest" {
     value     = "true"
   }
 
-  
 
-#   setting {
-#     namespace = "aws:ec2:vpc"
-#     name      = "VPCId"
-#     value     = module.vpc.vpc_id
-#   }
-# setting {
-#     namespace = "aws:ec2:vpc"
-#     name      = "Subnets"
-#     # value     = join(",", data.aws_subnet_ids.public_subnets.ids) 
-#      value     =  module.vpc.public_subnets
-#   }
+
+ setting {
+    namespace = "aws:elasticbeanstalk:environment"
+    name      = "LoadBalancerType"
+    value     = "application"
+  }
+
+  setting {
+    namespace = "aws:ec2:vpc"
+    name      = "VPCId"
+    value     = module.vpc.vpc_id
+  }
+
+  setting {
+    namespace = "aws:ec2:vpc"
+    name      = "Subnets"
+    value     = join(",", module.vpc.public_subnets)
+  }
+
+    setting {
+    namespace = "aws:autoscaling:launchconfiguration"
+    name      = "SecurityGroups"  # Specify the setting for attaching security groups
+    value     = aws_security_group.aurora.id
+  }
 
 }

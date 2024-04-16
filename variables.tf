@@ -18,12 +18,12 @@ variable "ec2-instance-maxSize" {
   default = 1
 }
 
-variable "postgres_username" {
+variable "mysql_username" {
  type = string
 default = "neochargedev"
 }
 
-variable "postgres_password" {
+variable "mysql_password" {
  description = "RDS root user password"
    default = 12345678
 }
