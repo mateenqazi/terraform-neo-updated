@@ -1,7 +1,7 @@
 
 
 resource "aws_elastic_beanstalk_application" "tftest" {
-  name        = "tf-test-name"
+  name        = "neocharge-application"
   description = "tf-test-desc"
 }
 
@@ -12,7 +12,7 @@ data "aws_elastic_beanstalk_solution_stack" "latest_docker" {
 
 
 resource "aws_elastic_beanstalk_environment" "tfenvtest" {
-  name                = "tf-test-name"
+  name                = "neocharge-env"
   application         = aws_elastic_beanstalk_application.tftest.name
   solution_stack_name = data.aws_elastic_beanstalk_solution_stack.latest_docker.name 
 

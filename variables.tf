@@ -30,7 +30,9 @@ variable "postgres_password" {
 
 variable "project_name" {
  type = string
-  default = "neocharge"
+  default = "neochargetest"
+
+  #NeoCharge_Dev
 }
 
 variable "public_subnets" {
