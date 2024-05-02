@@ -1,43 +1,45 @@
 variable "region" {
   type = string
-  default = "us-west-1"
 }
 
 variable "ec2-instance-type" {
+  description = "Type of Ec2 Instance"
   type = string
-  default = "t2.micro"
 }
 
-variable "ec2-instance-minSize" {
+variable "ec2-instance-min-size" {
+  description = "Minimum number of EC2 instances."
   type = number
-  default = 1
 }
 
-variable "ec2-instance-maxSize" {
+variable "ec2-instance-max-size" {
+  description = "Maximum number of EC2 instances."
   type = number
-  default = 1
 }
 
 variable "postgres_username" {
- type = string
-default = "neochargedev"
+  description = "Master database username."
+  type        = string
+  sensitive   = true
 }
 
 variable "postgres_password" {
- description = "RDS root user password"
-   default = 12345678
+  description = "Master database password."
+  type        = string
+  sensitive   = true
 }
 
 variable "project_name" {
- type = string
-  default = "neochargetest"
-
-  #NeoCharge_Dev
+  description = "Name of the project."
+  type = string
 }
 
-variable "public_subnets" {
-  type    = list(string)
-  default = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
+variable "progres_instance" {
+  description = "Name of the database instance."
+  type = string
 }
 
-
+variable "environment" {
+  description = "Environment for the deployment. Used for naming resources."
+  type        = string
+}
