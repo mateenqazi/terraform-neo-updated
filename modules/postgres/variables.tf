@@ -35,3 +35,11 @@ variable "database-instance-count" {
   description = "Number of database instance count"
   type        = number
 }
+
+variable "vpc_security_group_ids" {
+  type = list(string)
+}
+
+variable "db_subnet_group_name" {
+  type = string
+}

@@ -24,3 +24,13 @@ variable "environment" {
   description = "Environment for the deployment. Used for naming resources."
   type        = string
 }
+
+variable "security_groups" {
+  description = "Security Group."
+  type = list(string)
+}
+
+variable "vpc_id" {
+  description = "VPC ID."
+  type = string
+}

@@ -14,13 +14,14 @@ resource "aws_rds_cluster" "cluster" {
   cluster_identifier      = var.identifier_prefix
   master_username         = var.database_master_username
   master_password         = var.database_master_password
-  
-  # db_subnet_group_name    = aws_db_subnet_group.aurora.name
+  preferred_backup_window             = "07:40-08:10"
+  preferred_maintenance_window        = "sun:08:20-sun:08:50"
+  db_subnet_group_name    = var.db_subnet_group_name
   
   backup_retention_period = 30
   skip_final_snapshot     = true
-
-# vpc_security_group_ids  = [aws_security_group.aurora.id] 
+storage_encrypted         = true
+  vpc_security_group_ids  = var.vpc_security_group_ids
 
 }
 
