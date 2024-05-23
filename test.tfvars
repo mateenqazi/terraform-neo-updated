@@ -1,8 +1,10 @@
 region = "us-west-1"
-ec2-instance-type = "t3.small"
-ec2-instance-min-size = 1
-ec2-instance-max-size = 1
+ec2_instance_type = "t3.small"
+ec2_instance_min_size = 1
+ec2_instance_max_size = 1
 postgres_username = "changemeHiB89Dpi9oIJhRrBjfb72TCP"
 postgres_password = "changeme9zxBPNd808FTqiLvhBfGjfSs"
 project_name = "neo-charge-test"
-progres_instance = "neo-charge-test"
+postgres_instance = "neo-charge-test"
+mq_broker_username = "testtestest"
+mq_broker_password = "Mateen123Qazi"

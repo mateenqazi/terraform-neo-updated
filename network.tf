@@ -1,12 +1,10 @@
-# main.tf or networking.tf
-
 data "aws_availability_zones" "available" {
   state = "available"
 }
 
 resource "aws_vpc" "main_vpc" {
-  cidr_block = "10.0.0.0/16"
-  enable_dns_support = true
+  cidr_block           = "10.0.0.0/16"
+  enable_dns_support   = true
   enable_dns_hostnames = true
   tags = {
     Name = "MainVPC-${var.environment}"
@@ -14,9 +12,9 @@ resource "aws_vpc" "main_vpc" {
 }
 
 resource "aws_subnet" "main_subnet" {
-  count = 2
-  vpc_id = aws_vpc.main_vpc.id
-  cidr_block = cidrsubnet("10.0.0.0/16", 8, count.index)
+  count             = 2
+  vpc_id            = aws_vpc.main_vpc.id
+  cidr_block        = cidrsubnet("10.0.0.0/16", 8, count.index)
   availability_zone = element(data.aws_availability_zones.available.names, count.index)
   tags = {
     Name = "MainSubnet-${var.environment}-${count.index}"
@@ -66,9 +64,16 @@ resource "aws_security_group" "main_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-   ingress {
+  ingress {
     from_port   = 5432
     to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 0
+    to_port     = 65535
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
